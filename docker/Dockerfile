@@ -4,7 +4,7 @@ FROM debian:bookworm
 RUN apt update && apt install -y python3 make g++ python3-pip awscli
 
 # extra dependencies
-RUN apt install -y curl wget vim
+RUN apt install -y curl wget vim less
 
 RUN groupadd -g 1000 node \
     && useradd -m -u 1000 -g 1000 -s /bin/bash node
@@ -28,10 +28,12 @@ RUN echo 'export NVM_DIR="$HOME/.nvm"' >> "$HOME/.bashrc" \
   && nvm install --lts \
   && nvm alias default lts/* \
   && node -v && npm -v \
-  && npm install --global @google/gemini-cli @anthropic-ai/claude-code
+  && npm install --global @google/gemini-cli @anthropic-ai/claude-code @openai/codex@latest
+
 
 RUN mkdir -p $HOME/scripts
 COPY docker/entrypoint.sh /home/node/scripts/
-COPY docker/claude-key-helper.sh /home/node/scripts/
+
+## Last set of user desired dependencies to make builds faster via caching.
 
 ENTRYPOINT [ "/bin/bash", "-i", "/home/node/scripts/entrypoint.sh" ]
