@@ -70,4 +70,18 @@ cat << EOF > .claude.json
 }
 EOF
 
-/usr/bin/env bash
+TARGET_DIR=${TARGET_DIR:-/workdir}
+
+if [ -d "$TARGET_DIR" ]; then
+  cd "$TARGET_DIR"
+else
+  echo "No /workdir - going home"
+fi
+
+# If no command is passed, default to bash
+if [ $# -eq 0 ]; then
+  exec /usr/bin/bash
+else
+  # Execute provided command
+  exec "$@"
+fi
