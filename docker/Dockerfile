@@ -1,10 +1,10 @@
-FROM debian:bookworm
+FROM debian:trixie
 
 # base dependencies - e.g. python 3.11
-RUN apt update && apt install -y python3 make g++ python3-pip awscli
+RUN apt-get update && apt-get install -y python3 make g++ python3-pip awscli
 
 # extra dependencies
-RUN apt install -y curl wget vim less
+RUN apt-get install -y curl wget vim less
 
 RUN groupadd -g 1000 node \
     && useradd -m -u 1000 -g 1000 -s /bin/bash node
