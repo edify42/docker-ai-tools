@@ -18,7 +18,7 @@ RUN mkdir -p $NVM_DIR \
 USER node
 WORKDIR /home/node
 ENV NVM_DIR=/home/node/.nvm
-# nvm install
+# nvm install - ALL NPM COMMANDS MUST GO IN THE LARGE BLOCK BELOW
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
 RUN echo 'export NVM_DIR="$HOME/.nvm"' >> "$HOME/.bashrc" \
@@ -28,8 +28,9 @@ RUN echo 'export NVM_DIR="$HOME/.nvm"' >> "$HOME/.bashrc" \
   && nvm install --lts \
   && nvm alias default lts/* \
   && node -v && npm -v \
-  && npm install --global @google/gemini-cli @anthropic-ai/claude-code @openai/codex@latest
-
+  && npm install --global @google/gemini-cli @anthropic-ai/claude-code @openai/codex@latest \
+  && corepack enable \
+  && corepack prepare yarn@1.22.22 --activate
 
 RUN mkdir -p $HOME/scripts
 COPY docker/entrypoint.sh /home/node/scripts/
