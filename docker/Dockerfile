@@ -4,7 +4,7 @@ FROM debian:trixie
 RUN apt-get update && apt-get install -y python3 make g++ python3-pip awscli
 
 # extra dependencies
-RUN apt-get install -y curl wget vim less
+RUN apt-get install -y curl wget vim less git
 
 RUN groupadd -g 1000 node \
     && useradd -m -u 1000 -g 1000 -s /bin/bash node
@@ -35,6 +35,14 @@ RUN echo 'export NVM_DIR="$HOME/.nvm"' >> "$HOME/.bashrc" \
 RUN mkdir -p $HOME/scripts
 COPY docker/entrypoint.sh /home/node/scripts/
 
-## Last set of user desired dependencies to make builds faster via caching.
+RUN git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
+RUN echo 'export PATH=$PATH:$HOME/.tfenv/bin' >> ~/.bashrc
+
+# switch back to root user and install extra things
+USER root
+RUN apt-get install -y unzip
+
+## back to node user
+USER node
 
 ENTRYPOINT [ "/bin/bash", "-i", "/home/node/scripts/entrypoint.sh" ]
