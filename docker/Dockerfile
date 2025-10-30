@@ -40,7 +40,7 @@ RUN echo 'export PATH=$PATH:$HOME/.tfenv/bin' >> ~/.bashrc
 
 # switch back to root user and install extra things
 USER root
-RUN apt-get install -y unzip golang
+RUN apt-get install -y unzip golang jq
 
 ## back to node user
 USER node
